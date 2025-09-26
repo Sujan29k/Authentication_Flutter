@@ -1,22 +1,9 @@
 version: '3.8'
 services:
-  mongo:
-    image: mongo:6
-    restart: always
-    volumes:
-      - mongo-data:/data/db
-    ports:
-      - "27017:27017"
-
   backend:
     build: .
     environment:
-      - MONGO_URI=mongodb://mongo:27017/todos_db
+      - MONGO_URI=mongodb+srv://suzan:0000@cluster0.4bp01.mongodb.net/
       - JWT_SECRET=supersecretkey
     ports:
       - "3000:3000"
-    depends_on:
-      - mongo
-
-volumes:
-  mongo-data:
