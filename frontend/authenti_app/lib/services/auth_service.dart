@@ -25,12 +25,20 @@ class AuthService {
     String email,
     String password,
   ) async {
-    final res = await http.post(
-      Uri.parse('$_base/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'name': name, 'email': email, 'password': password}),
-    );
-    return res.statusCode == 201;
+    try {
+      print('Attempting to register at: $_base/register'); // Debug log
+      final res = await http.post(
+        Uri.parse('$_base/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'name': name, 'email': email, 'password': password}),
+      );
+
+      print('Register response: ${res.statusCode} - ${res.body}'); // Debug log
+      return res.statusCode == 201;
+    } catch (e) {
+      print('Register error: $e'); // Debug log
+      throw Exception('Network error: $e');
+    }
   }
 
   static Future<void> logout() async {

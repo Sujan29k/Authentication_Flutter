@@ -108,14 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  // Navigate to register screen (to be implemented)
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Register functionality not yet implemented',
-                      ),
-                    ),
-                  );
+                  Navigator.of(context).pushNamed('/register');
                 },
                 child: const Text('Don\'t have an account? Register'),
               ),

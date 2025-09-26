@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/register_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,6 +19,10 @@ class MyApp extends StatelessWidget {
           builder: (context, auth, _) =>
               auth.isAuthenticated ? const HomeScreen() : const LoginScreen(),
         ),
+        routes: {
+          '/register': (context) => const RegisterScreen(),
+          '/login': (context) => const LoginScreen(),
+        },
       ),
     );
   }
