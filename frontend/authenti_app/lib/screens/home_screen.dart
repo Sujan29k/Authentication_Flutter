@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/todo.dart';
 import '../services/todo_service.dart';
+import '../services/api_service.dart';
 import '../widgets/todo_tile.dart';
 import 'todo_edit_screen.dart';
 
@@ -21,6 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _checkTokenAndLoadTodos();
+  }
+
+  Future<void> _checkTokenAndLoadTodos() async {
+    // Debug: Check if token is stored
+    await ApiService.debugTokenStatus();
     _loadTodos();
   }
 
@@ -132,6 +139,17 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('My Todos'),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.bug_report),
+            onPressed: () async {
+              await ApiService.debugTokenStatus();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Check debug console for token info'),
+                ),
+              );
+            },
+          ),
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadTodos),
           IconButton(
             icon: const Icon(Icons.logout),

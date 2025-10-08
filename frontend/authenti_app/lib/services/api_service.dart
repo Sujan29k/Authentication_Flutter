@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../utils/secure_storage.dart';
+import '../config/api_config.dart';
 
 class ApiService {
-  static const baseUrl =
-      'http://10.0.2.2:3000/api'; // emulator localhost mapping
+  static String get baseUrl => ApiConfig.baseUrl + '/api';
 
   static Future<Map<String, String>> _authHeaders() async {
     final token = await SecureStorage.getToken();
@@ -40,5 +40,19 @@ class ApiService {
   static Future<http.Response> delete(String path) async {
     final headers = await _authHeaders();
     return http.delete(Uri.parse('$baseUrl$path'), headers: headers);
+  }
+
+  // Debug method to check token storage
+  static Future<void> debugTokenStatus() async {
+    final token = await SecureStorage.getToken();
+    print('=== TOKEN DEBUG ===');
+    print('Token exists: ${token != null}');
+    if (token != null) {
+      print('Token length: ${token.length}');
+      print('Token preview: ${token.substring(0, 20)}...');
+    } else {
+      print('No token found in storage');
+    }
+    print('==================');
   }
 }
