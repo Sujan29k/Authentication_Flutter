@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '../models/todo.dart';
+import '../models/item.dart';
 import '../services/todo_service.dart';
 import '../services/api_service.dart';
 import '../widgets/todo_tile.dart';
@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Todo> _todos = [];
+  List<Item> _todos = [];
   bool _isLoading = true;
   String? _error;
 
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _editTodo(Todo todo) async {
+  Future<void> _editTodo(Item todo) async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(builder: (context) => TodoEditScreen(todo: todo)),
     );
@@ -71,9 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _toggleTodo(Todo todo, bool? isDone) async {
+  Future<void> _toggleTodo(Item todo, bool? isDone) async {
     try {
-      await TodoService.updateTodo(todo.id, isDone: isDone ?? false);
+      await TodoService.updateTodo(todo.id!, isDone: isDone ?? false);
       _loadTodos(); // Refresh the list
     } catch (e) {
       if (mounted) {
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _deleteTodo(Todo todo) async {
+  Future<void> _deleteTodo(Item todo) async {
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (shouldDelete == true) {
       try {
-        await TodoService.deleteTodo(todo.id);
+        await TodoService.deleteTodo(todo.id!);
         _loadTodos(); // Refresh the list
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -143,11 +143,13 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.bug_report),
             onPressed: () async {
               await ApiService.debugTokenStatus();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Check debug console for token info'),
-                ),
-              );
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Check debug console for token info'),
+                  ),
+                );
+              }
             },
           ),
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadTodos),
@@ -172,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
 
-              if (shouldLogout == true && context.mounted) {
+              if (shouldLogout == true && mounted) {
                 await context.read<AuthProvider>().logout();
               }
             },

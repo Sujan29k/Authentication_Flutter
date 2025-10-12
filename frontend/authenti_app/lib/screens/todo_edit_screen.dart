@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/todo.dart';
+import '../models/item.dart';
 import '../services/todo_service.dart';
 
 class TodoEditScreen extends StatefulWidget {
-  final Todo? todo; // null for new todo, existing todo for edit
+  final Item? todo; // null for new todo, existing todo for edit
 
   const TodoEditScreen({super.key, this.todo});
 
@@ -42,7 +42,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
       } else {
         // Update existing todo
         await TodoService.updateTodo(
-          widget.todo!.id,
+          widget.todo!.id!,
           title: _titleController.text.trim(),
         );
       }
